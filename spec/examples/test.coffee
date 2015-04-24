@@ -1,0 +1,2 @@
+(something) ->
+  alert(something)

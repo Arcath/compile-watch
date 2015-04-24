@@ -1,0 +1,19 @@
+{
+  "name": "compile-watch",
+  "main": "./lib/compile-watch",
+  "version": "0.0.0",
+  "description": "Watch and compile files with atom",
+  "repository": "https://github.com/arcath/compile-watch",
+  "license": "MIT",
+  "engines": {
+    "atom": "*"
+  },
+  "dependencies": {
+    "fs-plus": "^2.0.4",
+    "node-sass": "^2.1.1",
+    "space-pen": "^4",
+    "atom-space-pen-views": "^0",
+    "underscore-plus": "1.x",
+    "coffee-script": "1.9.2"
+  }
+}

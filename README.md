@@ -1,0 +1,22 @@
+# compile-watch
+
+Spiritual successor to [sass-watch], supports any kind of compiling.
+
+## Usage
+
+_soon_
+
+## Supported Languages
+
+ - Coffee Script
+ - SASS
+
+### Adding a Language
+
+All the _formats_ are stored in `lib/formats` and should be written as there own class.
+
+The Coffee format in `lib/formats/coffee.coffee` shows an example of compiling a file using an _internal_ library and writing the output to the destination file.
+
+The SASS format in `lib/formats/sass.coffee` shows an example of running a child process to compile the source file to the destination file.
+
+[sass-watch]: https://github.com/Arcath/sass-watch
