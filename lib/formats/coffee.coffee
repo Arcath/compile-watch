@@ -9,6 +9,7 @@ class Coffee extends Format
   renderFile: (editor) ->
     js = CoffeeScript.compile editor.getText()
     fs.writeFileSync @outPath, js
+    atom.notifications.addSuccess('Coffee Compile completed!')
 
 
 

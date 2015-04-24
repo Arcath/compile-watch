@@ -13,6 +13,8 @@ class Sass extends Format
     childProcess.exec @command(), (error, stdout, stderr) ->
       if error
         atom.notifications.addError('SASS compile Error', {detail: error.message})
+      else
+        atom.notifications.addSuccess('SASS Compile completed!')
 
 
   command: ->
