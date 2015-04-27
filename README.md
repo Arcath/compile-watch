@@ -1,4 +1,4 @@
-# compile-watch
+# compile-watch [![Build Status](https://travis-ci.org/Arcath/compile-watch.svg)](https://travis-ci.org/Arcath/compile-watch)
 
 Spiritual successor to [sass-watch], supports any kind of compiling.
 
