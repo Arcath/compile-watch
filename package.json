@@ -14,6 +14,7 @@
     "space-pen": "^4",
     "atom-space-pen-views": "^0",
     "underscore-plus": "1.x",
-    "coffee-script": "1.9.2"
+    "coffee-script": "1.9.2",
+    "less": "2.5.0"
   }
 }

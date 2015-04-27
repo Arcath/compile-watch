@@ -194,3 +194,22 @@ describe 'Compile Watch', ->
 
       runs ->
         expect(fs.existsSync(path.join(__dirname, 'examples', 'test.css'))).toBe true
+
+  describe 'LESS Watcher', ->
+    beforeEach ->
+      if fs.existsSync(path.join(__dirname, 'examples', 'test.less-css'))
+        fs.unlinkSync path.join(__dirname, 'examples', 'test.less-css')
+
+      waitsForPromise ->
+        atom.workspace.open 'test.less'
+
+      runs ->
+        workspaceElement = atom.views.getView(atom.workspace)
+        jasmine.attachToDOM(workspaceElement)
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
+
+    it 'should compile a file', ->
+      process.compileWatch.emitter.emit 'watch-file', [path.join(__dirname, 'examples', 'test.less'), path.join(__dirname, 'examples', 'test.less-css'), process.compileWatch.formats['less'], editor]
+
+      expect(fs.existsSync(path.join(__dirname, 'examples', 'test.css'))).toBe true
