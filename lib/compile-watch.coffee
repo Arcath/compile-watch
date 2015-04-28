@@ -84,7 +84,7 @@ module.exports =
 
       projectPath = atom.project.getPaths()[0]
 
-      keyPath = filePath.replace(projectPath, '').substr(1)
+      keyPath = filePath.replace(projectPath, '').substr(1).replace('\\','/')
 
       if keyPath in process.compileWatch.projectConfig.autowatch
         data = []
