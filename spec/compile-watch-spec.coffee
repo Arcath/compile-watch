@@ -6,6 +6,9 @@ fs = require 'fs-plus'
 if fs.existsSync path.join(__dirname, 'examples', 'test.passed')
   fs.unlinkSync path.join(__dirname, 'examples', 'test.passed')
 
+if fs.existsSync path.join(__dirname, 'examples', 'auto-watched.passed')
+  fs.unlinkSync path.join(__dirname, 'examples', 'auto-watched.passed')
+
 class Spec extends Format
   this.outputFileType = 'passed'
   this.name = "Spec Parser"
@@ -34,6 +37,28 @@ describe 'Compile Watch', ->
 
     runs ->
       expect(process.compileWatch.formats['spec']).not.toBe undefined
+
+  it 'should load your config', ->
+    waitsForPromise ->
+      activationPromise
+
+    runs ->
+      expect(process.compileWatch.projectConfig).not.toBe {}
+
+  it 'should auto watch a file', ->
+    waitsForPromise ->
+      atom.workspace.open 'auto-watched.spec'
+
+    runs ->
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        waitsFor ->
+          fs.existsSync(path.join(__dirname, 'examples', 'auto-watched.passed'))
+
+        runs ->
+          expect(fs.existsSync(path.join(__dirname, 'examples', 'auto-watched.passed'))).toBe true
 
   describe 'New Watcher View', ->
     beforeEach ->

@@ -1,0 +1,12 @@
+{
+  "files": {
+    "auto-watched.spec": {
+      "output": "auto-watched.passed",
+      "format": "spec"
+    }
+  },
+
+  "autowatch": [
+    "auto-watched.spec"
+  ]
+}

@@ -4,6 +4,7 @@ process.compileWatch =
   emitter: new Emitter()
   formats: {}
   watchers: {}
+  projectConfig: {}
 
 fs = require 'fs-plus'
 path = require 'path'
@@ -28,9 +29,13 @@ module.exports =
   activate: ->
     atom.commands.add 'atom-workspace', 'compile-watch:watch', => @watchFile()
 
+    atom.workspace.observeTextEditors (editor) => @didOpenFile(editor)
+
     process.compileWatch.emitter.on 'watch-file', (data) => @addWatcher(data)
 
     @newWatcherView = new NewWatcherView()
+
+    @loadProjectConfig()
 
   watchFile: ->
     editor = atom.workspace.getActivePaneItem()
@@ -62,3 +67,30 @@ module.exports =
 
   addWatcher: (data) ->
     process.compileWatch.watchers[data[0]] = new Watcher(data[0], data[1], data[2], data[3])
+
+  loadProjectConfig: ->
+    filePath = path.join atom.project.getPaths()[0], '.compile-watch.json'
+
+    if fs.existsSync filePath
+      json = fs.readFileSync(filePath).toString()
+      process.compileWatch.projectConfig = JSON.parse json
+
+      atom.workspace.getTextEditors (editor) => @didOpenFile(editor)
+
+  didOpenFile: (editor) ->
+    if process.compileWatch.projectConfig.autowatch
+      file = editor?.buffer.file
+      filePath = file?.path
+
+      projectPath = atom.project.getPaths()[0]
+
+      keyPath = filePath.replace(projectPath, '').substr(1)
+
+      if keyPath in process.compileWatch.projectConfig.autowatch
+        data = []
+        data[0] = filePath
+        data[1] = path.join projectPath, process.compileWatch.projectConfig.files[keyPath].output
+        data[2] = process.compileWatch.formats[process.compileWatch.projectConfig.files[keyPath].format]
+        data[3] = editor
+
+        @addWatcher(data)
