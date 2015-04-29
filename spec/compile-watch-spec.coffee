@@ -37,6 +37,9 @@ describe 'Compile Watch', ->
 
     runs ->
       expect(process.compileWatch.formats['spec']).not.toBe undefined
+      expect(process.compileWatch.formats['sass']).not.toBe undefined
+      expect(process.compileWatch.formats['coffee']).not.toBe undefined
+      expect(process.compileWatch.formats['less']).not.toBe undefined
 
   it 'should load your config', ->
     waitsForPromise ->
@@ -140,9 +143,6 @@ describe 'Compile Watch', ->
           fs.existsSync path.join(__dirname, 'examples', 'test.passed')
 
         runs ->
-          notification = atom.notifications.notifications.reverse()[0]
-          expect(notification.type).toBe 'success'
-          expect(notification.message).toBe 'Spec parsed successfully'
           expect(fs.existsSync(path.join(__dirname, 'examples', 'test.passed'))).toBe true
 
     it 'should re-render on save', ->

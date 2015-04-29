@@ -37,6 +37,11 @@ module.exports =
 
     @loadProjectConfig()
 
+  deactivate: ->
+    for watcher in process.compileWatch.watchers
+      watcher.stopWatching()
+      delete process.compileWatch.watchers[watcher.inPath]
+
   watchFile: ->
     editor = atom.workspace.getActivePaneItem()
     file = editor?.buffer.file
