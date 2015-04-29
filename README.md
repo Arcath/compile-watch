@@ -14,6 +14,7 @@ compile-watch looks for a `.compile-watch.json` file in your projects root which
 
  - Auto watch files
  - Pre-set the output of a file
+ - Watch a parent file
 
 An example config file:
 
@@ -23,6 +24,9 @@ An example config file:
     "scss/layout.scss": {
       "output": "css/layout.css",
       "format": "scss"
+    },
+    "scss/imported.scss": {
+      "parent": "scss/layout.scss"
     },
     "coffee/layout.coffee": {
       "output": "js/layout.js",
@@ -36,6 +40,14 @@ An example config file:
   ]
 }
 ```
+
+This config file defined 3 files,
+
+ - __scss/layout.scss__ which is to be compiled to _css/layout.css_ using the _scss_ format.
+ - __scss/imported.scss__ which is to trigger a compile of its parent (which must be defined in this file).
+ - __coffee/layout.coffee__ which is be compiled to _js/layout.js_ using the _coffee_ format.
+
+It then declares 2 auto watch files which will be watched automatically when you open them. (These entries must match keys in the files object).
 
 ## Supported Languages
 
