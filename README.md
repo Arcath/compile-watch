@@ -4,7 +4,38 @@ Spiritual successor to [sass-watch], supports any kind of compiling.
 
 ## Usage
 
-_soon_
+### Commands
+
+- `Ctrl-Shift-W`, `Compile Watch: Watch` Watches the current file. You will be asked where to save the output.
+
+### Project Config
+
+compile-watch looks for a `.compile-watch.json` file in your projects root which allows you to:
+
+ - Auto watch files
+ - Pre-set the output of a file
+
+An example config file:
+
+```json
+{
+  "files": {
+    "scss/layout.scss": {
+      "output": "css/layout.css",
+      "format": "scss"
+    },
+    "coffee/layout.coffee": {
+      "output": "js/layout.js",
+      "format": "coffee"
+    }
+  },
+
+  "autowatch": [
+    "scss/layout.scss",
+    "coffee/layout.coffee"
+  ]
+}
+```
 
 ## Supported Languages
 
