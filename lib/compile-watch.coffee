@@ -66,7 +66,10 @@ module.exports =
       return process.compileWatch.formats[fileType]
 
   addWatcher: (data) ->
-    process.compileWatch.watchers[data[0]] = new Watcher(data[0], data[1], data[2], data[3])
+    unless process.compileWatch.watchers[data[0]]
+      process.compileWatch.watchers[data[0]] = new Watcher(data[0], data[1], data[2], data[3])
+    else
+      atom.notifications.addWarning('Already Watched')
 
   loadProjectConfig: ->
     filePath = path.join atom.project.getPaths()[0], '.compile-watch.json'
