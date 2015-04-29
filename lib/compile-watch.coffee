@@ -122,7 +122,7 @@ module.exports =
 
       keyPath = filePath.replace(projectPath, '').substr(1).replace('\\','/')
 
-      if keyPath in process.compileWatch.projectConfig.autowatch
+      if keyPath in process.compileWatch.projectConfig.autowatch?
         data = []
         data[0] = filePath
         data[1] = path.join projectPath, process.compileWatch.projectConfig.files[keyPath].output
@@ -131,9 +131,10 @@ module.exports =
 
         @addWatcher(data)
       else
-        fileConfig = process.compileWatch.projectConfig.files[keyPath]
-        if fileConfig?.parent
-          atom.notifications.addInfo('This file is included in another', {detail: fileConfig.parent})
+        if process.compileWatch.projectConfig.files?
+          fileConfig = process.compileWatch.projectConfig.files[keyPath]
+          if fileConfig?.parent
+            atom.notifications.addInfo('This file is included in another', {detail: fileConfig.parent})
 
   loadFormats: ->
     fs.readdirSync(formatsPath).forEach (file) ->
