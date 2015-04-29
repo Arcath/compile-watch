@@ -6,22 +6,24 @@ module.exports =
     disposables: []
 
     constructor: (@inPath, @outPath, formatClass, @editor) ->
-      @format = new formatClass(@inPath, @outPath)
+      @format = new formatClass(@inPath, @outPath, @editor)
 
       atom.notifications.addInfo('Watching File!', {detail: "Source #{@inPath}\r\nDestination: #{@outPath}\r\nAs: #{@format.name}"})
 
       @render()
 
-      @disposables.push @editor.buffer.emitter.on 'did-save', => @render()
-
-      @editor.emitter.on 'did-destroy', => @editorClosed()
+      if @editor
+        @disposables.push @editor.buffer.emitter.on 'did-save', => @render()
+        @editor.emitter.on 'did-destroy', => @editorClosed()
+      else
+        process.compileWatch.emitter.on @inPath, => @render()
 
     stopWatching: ->
       for disposable in @disposables
         disposable.dispose()
 
     render: ->
-      @format.renderFile(@editor)
+      @format.renderFile()
 
     editorClosed: ->
       @stopWatching()

@@ -6,8 +6,8 @@ class Coffee extends Format
   this.outputFileType = 'js'
   this.name = "Coffee Script"
 
-  renderFile: (editor) ->
-    js = CoffeeScript.compile editor.getText()
+  renderFile: ->
+    js = CoffeeScript.compile @getText()
     fs.writeFileSync @outPath, js
     atom.notifications.addSuccess('Coffee Compile completed!')
 

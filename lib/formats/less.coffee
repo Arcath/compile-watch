@@ -5,8 +5,8 @@ class LESS extends Format
   this.outputFileType = "css"
   this.name = "LESS"
 
-  renderFile: (editor) ->
-    less.render editor.getText(), (e, output) => @handleRender(e, output)
+  renderFile: ->
+    less.render @getText(), (e, output) => @handleRender(e, output)
 
   handleRender: (e, output) ->
     if e

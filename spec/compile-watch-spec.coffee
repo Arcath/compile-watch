@@ -15,8 +15,8 @@ class Spec extends Format
 
   renderCompleteMessage: 'Spec parsed successfully'
 
-  renderFile: (editor) ->
-    fs.writeFileSync @outPath, editor.getText()
+  renderFile: ->
+    fs.writeFileSync @outPath, @getText()
     @renderComplete()
 
 describe 'Compile Watch', ->
@@ -180,9 +180,66 @@ describe 'Compile Watch', ->
 
         expect(process.compileWatch.watchers[path.join(__dirname, 'examples', 'test.spec')]).toBe undefined
 
+  describe 'Sub File Compiling', ->
+    beforeEach ->
+      if fs.existsSync path.join(__dirname, 'examples', 'parent-file.passed')
+        fs.unlinkSync path.join(__dirname, 'examples', 'parent-file.passed')
+
+      if fs.existsSync path.join(__dirname, 'examples', 'sub-file.passed')
+        fs.unlinkSync path.join(__dirname, 'examples', 'sub-file.passed')
+
+      waitsForPromise ->
+        atom.workspace.open 'sub-file.spec'
+
+      runs ->
+        workspaceElement = atom.views.getView(atom.workspace)
+        jasmine.attachToDOM(workspaceElement)
+        editor = atom.workspace.getActiveTextEditor()
+        editorView = atom.views.getView(editor)
+
+    it 'should tell you that this file is a sub of another', ->
+      notification = atom.notifications.notifications.reverse()[0]
+      expect(notification.type).toBe 'info'
+      expect(notification.message).toBe 'This file is included in another'
+      expect(notification.options.detail).toBe 'parent-file.spec'
+
+    it 'should render the parent file when this one is watched', ->
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        process.compileWatch.emitter.emit 'watch-file', [path.join(__dirname, 'examples', 'sub-file.spec'), editor]
+
+        waitsFor ->
+          fs.existsSync path.join(__dirname, 'examples', 'parent-file.passed')
+
+        runs ->
+          expect(fs.existsSync(path.join(__dirname, 'examples', 'parent-file.passed'))).toBe true
+          expect(fs.existsSync(path.join(__dirname, 'examples', 'sub-file.passed'))).toBe false
+
+    it 'should re-render the parent on save of the sub file', ->
+      waitsForPromise ->
+        activationPromise
+
+      runs ->
+        process.compileWatch.emitter.emit 'watch-file', [path.join(__dirname, 'examples', 'sub-file.spec'), editor]
+
+        waitsFor ->
+          fs.existsSync path.join(__dirname, 'examples', 'parent-file.passed')
+
+        runs ->
+          fs.unlinkSync path.join(__dirname, 'examples', 'parent-file.passed')
+
+          process.compileWatch.watchers[path.join(__dirname, 'examples', 'sub-file.spec')].editor.buffer.emitter.emit 'did-save'
+
+          expect(fs.existsSync(path.join(__dirname, 'examples', 'parent-file.passed'))).toBe true
+
+
+
   describe 'Coffee Watcher', ->
     beforeEach ->
-      fs.unlinkSync path.join(__dirname, 'examples', 'test.js')
+      if fs.existsSync path.join(__dirname, 'examples', 'test.js')
+        fs.unlinkSync path.join(__dirname, 'examples', 'test.js')
 
       waitsForPromise ->
         atom.workspace.open 'test.coffee'
@@ -200,7 +257,8 @@ describe 'Compile Watch', ->
 
   describe 'SASS Watcher', ->
     beforeEach ->
-      fs.unlinkSync path.join(__dirname, 'examples', 'test.css')
+      if fs.existsSync path.join(__dirname, 'examples', 'test.css')
+        fs.unlinkSync path.join(__dirname, 'examples', 'test.css')
 
       waitsForPromise ->
         atom.workspace.open 'test.scss'

@@ -8,7 +8,7 @@ class Sass extends Format
 
   binary: path.join(__dirname, "..", "..", "node_modules", "node-sass", "bin", "node-sass")
 
-  renderFile: (editor) ->
+  renderFile: ->
     childProcess.exec @command(), (error, stdout, stderr) ->
       if error
         atom.notifications.addError('SASS compile Error', {detail: error.message})

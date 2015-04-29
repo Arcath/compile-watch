@@ -3,6 +3,13 @@
     "auto-watched.spec": {
       "output": "auto-watched.passed",
       "format": "spec"
+    },
+    "sub-file.spec": {
+      "parent": "parent-file.spec"
+    },
+    "parent-file.spec": {
+      "output": "parent-file.passed",
+      "format": "spec"
     }
   },
 

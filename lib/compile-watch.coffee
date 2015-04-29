@@ -11,9 +11,7 @@ path = require 'path'
 
 formatsPath = path.join __dirname, 'formats'
 
-fs.readdirSync(formatsPath).forEach (file) ->
-  require './formats/' + file
-
+ChildWatcher = require './child-watcher'
 NewWatcherView = require './views/new-watcher-view'
 Watcher = require './watcher'
 
@@ -35,12 +33,19 @@ module.exports =
 
     @newWatcherView = new NewWatcherView()
 
+    @loadFormats()
     @loadProjectConfig()
 
   deactivate: ->
     for watcher in process.compileWatch.watchers
       watcher.stopWatching()
       delete process.compileWatch.watchers[watcher.inPath]
+
+    process.compileWatch =
+      emitter: new Emitter()
+      formats: process.compileWatch.formats
+      watchers: {}
+      projectConfig: {}
 
   watchFile: ->
     editor = atom.workspace.getActivePaneItem()
@@ -72,9 +77,32 @@ module.exports =
 
   addWatcher: (data) ->
     unless process.compileWatch.watchers[data[0]]
-      process.compileWatch.watchers[data[0]] = new Watcher(data[0], data[1], data[2], data[3])
+      if data.length == 2
+        projectPath = atom.project.getPaths()[0]
+        keyPath = data[0].replace(projectPath, '').substr(1).replace('\\','/')
+        fileConfig = process.compileWatch.projectConfig.files[keyPath]
+        if fileConfig.parent
+          @addParentWatcher(data[0], projectPath, fileConfig, data[1])
+        else
+          throw 'data array too small'
+      else
+        process.compileWatch.watchers[data[0]] = new Watcher(data[0], data[1], data[2], data[3])
     else
       atom.notifications.addWarning('Already Watched')
+
+  addParentWatcher: (subFilePath, projectPath, subFileConfig, editor) ->
+    parentFilePath = path.join projectPath, subFileConfig.parent
+
+    process.compileWatch.watchers[subFilePath] = new ChildWatcher(subFilePath, parentFilePath, editor)
+
+    if process.compileWatch.watchers[parentFilePath]
+      atom.notifications.addInfo('Parent File already wacthed')
+    else
+      parentFileConfig = process.compileWatch.projectConfig.files[subFileConfig.parent]
+      parentFileOutput = path.join projectPath, parentFileConfig.output
+      parentFormatClass = process.compileWatch.formats[parentFileConfig.format]
+
+      process.compileWatch.watchers[parentFilePath] = new Watcher(parentFilePath, parentFileOutput, parentFormatClass, false)
 
   loadProjectConfig: ->
     filePath = path.join atom.project.getPaths()[0], '.compile-watch.json'
@@ -86,7 +114,7 @@ module.exports =
       atom.workspace.getTextEditors (editor) => @didOpenFile(editor)
 
   didOpenFile: (editor) ->
-    if process.compileWatch.projectConfig.autowatch
+    if process.compileWatch.projectConfig
       file = editor?.buffer.file
       filePath = file?.path
 
@@ -102,3 +130,11 @@ module.exports =
         data[3] = editor
 
         @addWatcher(data)
+      else
+        fileConfig = process.compileWatch.projectConfig.files[keyPath]
+        if fileConfig?.parent
+          atom.notifications.addInfo('This file is included in another', {detail: fileConfig.parent})
+
+  loadFormats: ->
+    fs.readdirSync(formatsPath).forEach (file) ->
+      require './formats/' + file
