@@ -8,7 +8,7 @@ module.exports =
     constructor: (@inPath, @outPath, formatClass, @editor) ->
       @format = new formatClass(@inPath, @outPath, @editor)
 
-      atom.notifications.addInfo('Watching File!', {detail: "Source #{@inPath}\r\nDestination: #{@outPath}\r\nAs: #{@format.name}"})
+      atom.notifications.addInfo('Watching File!', {detail: "Source #{@inPath}\r\nDestination: #{@outPath}\r\nAs: #{formatClass.name}"})
 
       @render()
 
