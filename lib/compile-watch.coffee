@@ -25,6 +25,9 @@ module.exports =
   newWatcherView: null
 
   activate: ->
+    @loadProjectConfig()
+    @loadFormats()
+
     atom.commands.add 'atom-workspace', 'compile-watch:watch', => @watchFile()
 
     atom.workspace.observeTextEditors (editor) => @didOpenFile(editor)
@@ -32,9 +35,6 @@ module.exports =
     process.compileWatch.emitter.on 'watch-file', (data) => @addWatcher(data)
 
     @newWatcherView = new NewWatcherView()
-
-    @loadFormats()
-    @loadProjectConfig()
 
   deactivate: ->
     for watcher in process.compileWatch.watchers
@@ -120,16 +120,17 @@ module.exports =
 
       projectPath = atom.project.getPaths()[0]
 
-      keyPath = filePath.replace(projectPath, '').substr(1).replace('\\','/')
+      keyPath = filePath.replace(projectPath, '').substr(1).replace(/\\/g,'/')
 
-      if keyPath in process.compileWatch.projectConfig.autowatch?
-        data = []
-        data[0] = filePath
-        data[1] = path.join projectPath, process.compileWatch.projectConfig.files[keyPath].output
-        data[2] = process.compileWatch.formats[process.compileWatch.projectConfig.files[keyPath].format]
-        data[3] = editor
+      if process.compileWatch.projectConfig.autowatch?
+        if keyPath in process.compileWatch.projectConfig.autowatch
+          data = []
+          data[0] = filePath
+          data[1] = path.join projectPath, process.compileWatch.projectConfig.files[keyPath].output
+          data[2] = process.compileWatch.formats[process.compileWatch.projectConfig.files[keyPath].format]
+          data[3] = editor
 
-        @addWatcher(data)
+          @addWatcher(data)
       else
         if process.compileWatch.projectConfig.files?
           fileConfig = process.compileWatch.projectConfig.files[keyPath]
