@@ -14,7 +14,7 @@ module.exports =
 
       if @editor
         @disposables.push @editor.buffer.emitter.on 'did-save', => @render()
-        @editor.emitter.on 'did-destroy', => @editorClosed()
+        @disposables.push @editor.emitter.on 'did-destroy', => @editorClosed()
       else
         process.compileWatch.emitter.on @inPath, => @render()
 
