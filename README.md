@@ -1,8 +1,10 @@
 # compile-watch [![Build Status](https://travis-ci.org/Arcath/compile-watch.svg)](https://travis-ci.org/Arcath/compile-watch)
 
-Spiritual successor to [sass-watch], supports any kind of compiling.
+The last compiler package you need to install.
 
 ## Usage
+
+Watch a file and everytime you save it compile-watch will compile it to your desired output location. When you close a file compile-watch will stop watching it. See _Project Config_ for details on how to make compile-watch even faster.
 
 ### Commands
 
@@ -64,5 +66,3 @@ The Coffee format in `lib/formats/coffee.coffee` shows an example of compiling a
 The SASS format in `lib/formats/sass.coffee` shows an example of running a child process to compile the source file to the destination file.
 
 There is a guide on how to write a compiler [here](http://arcath.net/2015/04/27/creating-the-less-compiler-for-compile-watch.html).
-
-[sass-watch]: https://github.com/Arcath/sass-watch
