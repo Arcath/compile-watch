@@ -113,15 +113,21 @@ module.exports =
 
       atom.workspace.getTextEditors (editor) => @didOpenFile(editor)
 
+  reloadProjectConfig: ->
+    filePath = path.join atom.project.getPaths()[0], '.compile-watch.json'
+    json = fs.readFileSync(filePath).toString()
+    process.compileWatch.projectConfig = JSON.parse json
+    atom.notifications.addInfo('Project Config updated!')
+
   didOpenFile: (editor) ->
+    file = editor?.buffer.file
+    filePath = file?.path
+
+    projectPath = atom.project.getPaths()[0]
+
+    keyPath = filePath.replace(projectPath, '').substr(1).replace(/\\/g,'/')
+
     if process.compileWatch.projectConfig
-      file = editor?.buffer.file
-      filePath = file?.path
-
-      projectPath = atom.project.getPaths()[0]
-
-      keyPath = filePath.replace(projectPath, '').substr(1).replace(/\\/g,'/')
-
       if process.compileWatch.projectConfig.autowatch?
         if keyPath in process.compileWatch.projectConfig.autowatch
           data = []
@@ -136,6 +142,10 @@ module.exports =
           fileConfig = process.compileWatch.projectConfig.files[keyPath]
           if fileConfig?.parent
             atom.notifications.addInfo('This file is included in another', {detail: fileConfig.parent})
+
+    if keyPath == '.compile-watch.json'
+      atom.notifications.addInfo('Project Config Open')
+      editor.buffer.emitter.on  'did-save', => @reloadProjectConfig()
 
   loadFormats: ->
     fs.readdirSync(formatsPath).forEach (file) ->
