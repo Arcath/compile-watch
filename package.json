@@ -1,7 +1,7 @@
 {
   "name": "compile-watch",
   "main": "./lib/compile-watch",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Watch and compile files with atom",
   "repository": "https://github.com/arcath/compile-watch",
   "license": "MIT",
