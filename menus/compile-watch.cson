@@ -1,0 +1,11 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Compile Watch'
+      'submenu': [
+        { 'label': 'Watch this File', 'command': 'compile-watch:watch'}
+      ]
+    ]
+  }
+]
