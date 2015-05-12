@@ -105,7 +105,10 @@ module.exports =
       process.compileWatch.watchers[parentFilePath] = new Watcher(parentFilePath, parentFileOutput, parentFormatClass, false)
 
   loadProjectConfig: ->
-    filePath = path.join atom.project.getPaths()[0], '.compile-watch.json'
+    try
+      filePath = path.join atom.project.getPaths()[0], '.compile-watch.json'
+    catch
+      filePath = null
 
     if fs.existsSync filePath
       json = fs.readFileSync(filePath).toString()
