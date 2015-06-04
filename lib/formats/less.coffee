@@ -1,5 +1,6 @@
 less = require 'less'
 Format = require '../format'
+fs = require 'fs-plus'
 
 class LESS extends Format
   this.outputFileType = "css"

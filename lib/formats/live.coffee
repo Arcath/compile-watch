@@ -1,4 +1,5 @@
 LiveScript = require 'livescript'
+fs = require 'fs-plus'
 
 Format = require '../format'
 

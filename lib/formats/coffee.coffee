@@ -1,4 +1,5 @@
 CoffeeScript = require 'coffee-script'
+fs = require 'fs-plus'
 
 Format = require '../format'
 
