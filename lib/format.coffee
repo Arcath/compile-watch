@@ -1,3 +1,5 @@
+fs = require 'fs-plus'
+
 module.exports =
   class Format
     inPath: null

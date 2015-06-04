@@ -2,6 +2,7 @@ Format = require '../lib/format'
 
 {$} = require 'space-pen'
 fs = require 'fs-plus'
+path = require 'path'
 
 if fs.existsSync path.join(__dirname, 'examples', 'test.passed')
   fs.unlinkSync path.join(__dirname, 'examples', 'test.passed')
