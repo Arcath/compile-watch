@@ -55,6 +55,7 @@ It then declares 2 auto watch files which will be watched automatically when you
 
  - Coffee Script
  - LESS
+ - LIVE
  - SASS
 
 ### Adding a Language
