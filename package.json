@@ -1,7 +1,7 @@
 {
   "name": "compile-watch",
   "main": "./lib/compile-watch",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Watch and compile files with atom. Currently supports Coffee, Less, Live & SASS",
   "repository": "https://github.com/arcath/compile-watch",
   "license": "MIT",
