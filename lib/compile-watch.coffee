@@ -140,11 +140,10 @@ module.exports =
           data[3] = editor
 
           @addWatcher(data)
-      else
-        if process.compileWatch.projectConfig.files?
-          fileConfig = process.compileWatch.projectConfig.files[keyPath]
-          if fileConfig?.parent
-            atom.notifications.addInfo('This file is included in another', {detail: fileConfig.parent})
+      if process.compileWatch.projectConfig.files?
+        fileConfig = process.compileWatch.projectConfig.files[keyPath]
+        if fileConfig?.parent
+          atom.notifications.addInfo('This file is included in another', {detail: fileConfig.parent})
 
     if keyPath == '.compile-watch.json'
       atom.notifications.addInfo('Project Config Open')
