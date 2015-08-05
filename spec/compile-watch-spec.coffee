@@ -316,3 +316,15 @@ describe 'Compile Watch', ->
       process.compileWatch.emitter.emit 'watch-file', [path.join(__dirname, 'examples', 'test-ls.ls'), path.join(__dirname, 'examples', 'test-ls.js'), process.compileWatch.formats['ls'], editor]
 
       expect(fs.existsSync(path.join(__dirname, 'examples', 'test-ls.js'))).toBe true
+
+  describe 'Config View', ->
+    beforeEach ->
+      waitsForPromise ->
+        atom.workspace.open 'atom://compile-watch'
+
+      runs ->
+        workspaceElement = atom.views.getView(atom.workspace)
+        jasmine.attachToDOM(workspaceElement)
+
+    it 'should have opened', ->
+      $()

@@ -12,6 +12,7 @@ path = require 'path'
 formatsPath = path.join __dirname, 'formats'
 
 ChildWatcher = require './child-watcher'
+ConfigView = require './views/config-view'
 NewWatcherView = require './views/new-watcher-view'
 Watcher = require './watcher'
 
@@ -29,12 +30,17 @@ module.exports =
     @loadFormats()
 
     atom.commands.add 'atom-workspace', 'compile-watch:watch', => @watchFile()
+    atom.commands.add 'atom-workspace', 'compile-watch:config', => @openConfig()
 
     atom.workspace.observeTextEditors (editor) => @didOpenFile(editor)
 
     process.compileWatch.emitter.on 'watch-file', (data) => @addWatcher(data)
 
     @newWatcherView = new NewWatcherView()
+
+    atom.workspace.addOpener (uri) ->
+      if uri is 'atom://compile-watch'
+        return new ConfigView()
 
   deactivate: ->
     for watcher in process.compileWatch.watchers
@@ -152,3 +158,6 @@ module.exports =
   loadFormats: ->
     fs.readdirSync(formatsPath).forEach (file) ->
       require './formats/' + file
+
+  openConfig: ->
+    atom.workspace.open 'atom://compile-watch'
