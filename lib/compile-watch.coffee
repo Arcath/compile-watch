@@ -157,7 +157,8 @@ module.exports =
 
   loadFormats: ->
     fs.readdirSync(formatsPath).forEach (file) ->
-      require './formats/' + file
+      if file.match /\.coffee/
+        require './formats/' + file
 
   openConfig: ->
     atom.workspace.open 'atom://compile-watch'
