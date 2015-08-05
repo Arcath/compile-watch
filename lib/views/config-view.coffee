@@ -6,6 +6,7 @@ module.exports =
     @content: ->
       @div =>
         @h1 'Compile Watch'
+        @h2 'Coming Soon'
 
     getTitle: ->
       'Compile Watch'
